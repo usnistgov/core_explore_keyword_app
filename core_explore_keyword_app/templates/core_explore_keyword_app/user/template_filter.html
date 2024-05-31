@@ -1,13 +1,13 @@
 {% if data.search_form.global_templates|length > 0 or data.search_form.user_templates|length > 0 %}
 {% if data.search_form.global_templates|length > 0 %}
-<div class="card">
+<div class="card mb-3">
     <div class="card-header">
         <div class="row row-template">
             <div class="col-md-8 col-template">
                 Filter by Template
             </div>
-            <div class="{% if BOOTSTRAP_VERSION|first == "4" %}pl-0{% elif BOOTSTRAP_VERSION|first == "5"  %}ps-0{% endif %} col-md-4 col-template">
-                <div class="{% if BOOTSTRAP_VERSION|first == "4" %}float-right{% elif BOOTSTRAP_VERSION|first == "5"  %}float-end{% endif %}">
+            <div class="{% if BOOTSTRAP_VERSION|first == '4' %}pl-0{% elif BOOTSTRAP_VERSION|first == '5' %}ps-0{% endif %} col-md-4 col-template">
+                <div class="{% if BOOTSTRAP_VERSION|first == '4' %}float-right{% elif BOOTSTRAP_VERSION|first == '5' %}float-end{% endif %}">
                     <a class="selectAllGlobalTemplateButton" href="javascript:void(0)">
                         Select All
                     </a>
@@ -15,9 +15,9 @@
             </div>
         </div>
     </div>
-</div>
-<div class="list-group-item">
-    {{ data.search_form.global_templates }}
+    <div class="list-group list-group-flush list-group-item">
+        {{ data.search_form.global_templates }}
+    </div>
 </div>
 {% endif %}
 {% if data.search_form.user_templates|length > 0 %}
@@ -27,8 +27,8 @@
             <div class="col-md-9 col-template">
                 Filter by User Template
             </div>
-            <div class="{% if BOOTSTRAP_VERSION|first == "4" %}pl-0{% elif BOOTSTRAP_VERSION|first == "5"  %}ps-0{% endif %} col-md-3 col-template">
-                <div class="{% if BOOTSTRAP_VERSION|first == "4" %}float-right{% elif BOOTSTRAP_VERSION|first == "5"  %}float-end{% endif %}">
+            <div class="{% if BOOTSTRAP_VERSION|first == '4' %}pl-0{% elif BOOTSTRAP_VERSION|first == '5'  %}ps-0{% endif %} col-md-3 col-template">
+                <div class="{% if BOOTSTRAP_VERSION|first == '4' %}float-right{% elif BOOTSTRAP_VERSION|first == '5'  %}float-end{% endif %}">
                     <a class="selectAllUserTemplateButton" href="javascript:void(0)">
                         Select All
                     </a>
@@ -36,9 +36,9 @@
             </div>
         </div>
     </div>
-</div>
-<div class="list-group-item">
-    {{ data.search_form.user_templates }}
+    <div class="list-group list-group-flush list-group-item">
+        {{ data.search_form.user_templates }}
+    </div>
 </div>
     {% endif %}
 {% endif %}
