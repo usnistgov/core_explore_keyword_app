@@ -1,9 +1,6 @@
 /**
  * Search
  */
-var SUBMIT_DELAY = 3000;
-var SORTING_SUBMIT_DELAY = 500;
-var timer;
 var cachedOperators;
 const SELECT_ALL_LABEL = "Select All";
 const UNSELECT_ALL_LABEL = "Unselect All";
@@ -43,21 +40,15 @@ function showHidePlaceholder($tagit){
 var initAutoSubmit = function() {
     $("#id_keywords").tagit({
         onTagAdded: function(event, ui) {
-            // delay submission after a tag is added
-            fancyTreeSelectDelaySubmit();
             cleanSearchOperatorStyle(true);
         }
     });
 
     $('#id_keywords').tagit().next('ul').find('li input.ui-widget-content').focus(function(e) {
         if (!e.originalEvent) return;
-        // avoid submission when a tag is focused
-        clearTimeout(timer);
-        timer = null;
     });
 
     $(".ui-autocomplete-input").on("keyup", (event) => {
-
         var jqNewTagInputValue = $(".ui-autocomplete-input").val();
         // check the key if the key is ':' it could be a search operator
         if (event.originalEvent && event.originalEvent.key === ':') {
@@ -65,10 +56,6 @@ var initAutoSubmit = function() {
             checkOperator(jqNewTagInputValue, jqCurrentTarget);
         } else if ( jqNewTagInputValue === "" || jqNewTagInputValue.indexOf(":") === -1) {
             cleanSearchOperatorStyle(true);
-        } else if ( event.originalEvent.key !== "Enter") {
-            // avoid submission when user is typing
-            clearTimeout(timer);
-            timer = null;
         }
     });
 }
@@ -259,27 +246,6 @@ var selectAllTemplate = function(event) {
     });
 }
 
-/**
- * Called after any selection in the tree
- */
-var fancyTreeSelectDelaySubmit = function(force=true){
-    if (force) {
-        delaySubmission();
-    } else {
-        if (timer)
-            delaySubmission();
-    }
-}
-
-/**
- * Delay submission
- */
-var delaySubmission = function() {
-    // clear the timer
-    clearTimeout(timer);
-    // submit the form after 3 sec
-    timer = setTimeout(submitForm, SUBMIT_DELAY);
-}
 
 /**
  * Submit the form
@@ -300,7 +266,7 @@ var initSortingAutoSubmit = function() {
             clearInterval(interval);
             $(".dropdown-menu.tools-menu.filter-dropdown-menu li").click(debounce(function() {
                 submitForm();
-            }, SORTING_SUBMIT_DELAY));
+            }, 200));
         }
     }, 500);
 }
