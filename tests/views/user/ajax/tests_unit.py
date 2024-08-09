@@ -54,7 +54,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch("core_explore_keyword_app.views.user.ajax.sanitize_value")
     @patch("core_explore_keyword_app.views.user.ajax.KeywordForm")
@@ -67,7 +67,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch(
         "core_explore_keyword_app.views.user.ajax.template_version_manager_api.get_by_id_list"
@@ -86,7 +86,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch("core_explore_keyword_app.views.user.ajax.query_api.get_by_id")
     @patch(
@@ -111,7 +111,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch("core_explore_keyword_app.views.user.ajax._get_local_data_source")
     @patch("core_explore_keyword_app.views.user.ajax.query_api.get_by_id")
@@ -139,7 +139,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch(
         "core_explore_keyword_app.views.user.ajax.SuggestionsKeywordSearchView._get_query_prepared"
@@ -175,7 +175,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch(
         "core_explore_keyword_app.views.user.ajax.SuggestionsKeywordSearchView._extract_suggestion_from_results"
@@ -216,7 +216,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     @patch(
         "core_explore_keyword_app.views.user.ajax.SuggestionsKeywordSearchView._extract_suggestion_from_results"
@@ -258,7 +258,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     @patch(
         "core_explore_keyword_app.views.user.ajax.SuggestionsKeywordSearchView._extract_suggestion_from_results"
@@ -300,7 +300,7 @@ class TestSuggestionsKeywordSearchViewPost(TestCase):
 
         response = self._send_post_request()
 
-        self.assertEquals(json.loads(response.content), {"suggestions": []})
+        self.assertEqual(json.loads(response.content), {"suggestions": []})
 
 
 class TestGetLocalDataSource(TestCase):

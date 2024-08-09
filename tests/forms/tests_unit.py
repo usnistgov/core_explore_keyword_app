@@ -44,4 +44,4 @@ class TestKeywordFormCleanKeywords(TestCase):
         """test_sanitize_value_returns_cleaned_data"""
         mock_sanitize_value.return_value = self.keyword
 
-        self.assertEquals(self.form.clean_keywords(), self.keyword)
+        self.assertEqual(self.form.clean_keywords(), self.keyword)
