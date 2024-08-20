@@ -1,5 +1,6 @@
 """ Serializers used for the persistent query keyword REST API.
 """
+
 from rest_framework.serializers import ModelSerializer
 
 from core_explore_keyword_app.components.persistent_query_keyword import (
@@ -25,9 +26,11 @@ class PersistentQueryKeywordSerializer(ModelSerializer):
         # Create instance from the validated data and insert it in DB
         persistent_query_keyword = PersistentQueryKeyword(
             user_id=str(self.context["request"].user.id),
-            content=validated_data["content"]
-            if "content" in validated_data
-            else None,
+            content=(
+                validated_data["content"]
+                if "content" in validated_data
+                else None
+            ),
             name=validated_data["name"] if "name" in validated_data else None,
         )
         persistent_query_keyword_api.upsert(
@@ -71,9 +74,11 @@ class PersistentQueryKeywordAdminSerializer(ModelSerializer):
         # Create data
         persistent_query_keyword = PersistentQueryKeyword(
             user_id=validated_data["user_id"],
-            content=validated_data["content"]
-            if "content" in validated_data
-            else None,
+            content=(
+                validated_data["content"]
+                if "content" in validated_data
+                else None
+            ),
             name=validated_data["name"] if "name" in validated_data else None,
         )
         persistent_query_keyword_api.upsert(

@@ -1,5 +1,6 @@
 """Core Explore Keyword App views
 """
+
 import json
 from typing import Dict, Any, List
 

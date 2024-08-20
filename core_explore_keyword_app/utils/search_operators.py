@@ -1,5 +1,6 @@
 """ Search operators utilities
 """
+
 import logging
 
 from core_main_app.commons.exceptions import ApiError

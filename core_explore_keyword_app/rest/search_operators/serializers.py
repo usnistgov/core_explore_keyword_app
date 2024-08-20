@@ -1,5 +1,6 @@
 """ Serializers used for the search operator REST API.
 """
+
 from rest_framework.serializers import ModelSerializer
 
 from core_explore_keyword_app.components.search_operator import (

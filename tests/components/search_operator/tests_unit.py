@@ -1,5 +1,6 @@
 """ Unit tests for SearchOperator API calls.
 """
+
 from unittest import TestCase, mock
 
 from core_main_app.commons import exceptions

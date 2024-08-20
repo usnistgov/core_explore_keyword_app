@@ -1,5 +1,6 @@
 """ Admin views for explore by keyword
 """
+
 from django.views.generic import View
 
 from core_main_app.utils.rendering import admin_render

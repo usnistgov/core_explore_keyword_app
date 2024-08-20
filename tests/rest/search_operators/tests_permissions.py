@@ -1,5 +1,6 @@
 """ Authentication tests for search operators REST API.
 """
+
 from unittest.mock import patch
 
 from django.test import SimpleTestCase

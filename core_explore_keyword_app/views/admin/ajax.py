@@ -1,5 +1,6 @@
 """ Ajax views for core_explore_keyword_app
 """
+
 from django.contrib import messages
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.http import JsonResponse

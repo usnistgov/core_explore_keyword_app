@@ -10,6 +10,7 @@ menus are displayed:
     * Explore by keyword
         * Search operators
 """
+
 from django.urls import reverse
 from menu import Menu, MenuItem
 

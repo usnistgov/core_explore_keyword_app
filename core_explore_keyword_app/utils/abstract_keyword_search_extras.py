@@ -1,5 +1,6 @@
 """ Abstract Keyword Search Extras
 """
+
 from abc import ABCMeta, abstractmethod
 
 

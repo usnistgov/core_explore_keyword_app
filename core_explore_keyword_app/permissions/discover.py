@@ -1,5 +1,6 @@
 """ Discover rules for core explore keyword app.
 """
+
 import logging
 
 from core_explore_keyword_app.permissions import (

@@ -1,5 +1,6 @@
 """ Custom admin site for the Persistent Query Keyword model
 """
+
 from django.contrib import admin
 
 
