@@ -2,6 +2,13 @@
 """
 
 from django.utils.decorators import method_decorator
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiResponse,
+)
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -15,17 +22,26 @@ from core_explore_keyword_app.rest.search_operators.serializers import (
 )
 
 
+@extend_schema(
+    tags=["Search Operator"],
+    description="List search operators",
+)
 class SearchOperatorList(APIView):
     """List search operators"""
 
+    @extend_schema(
+        summary="Get all search operators",
+        description="Retrieve a list of all search operators",
+        responses={
+            200: SearchOperatorSerializer(many=True),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+    )
     def get(self, request):
         """Get all search operators
-
         Args:
             request: HTTP request
-
         Returns:
-
             - code: 200
               content: List of search operators
             - code: 500
@@ -33,12 +49,10 @@ class SearchOperatorList(APIView):
         """
         try:
             search_operator_list = search_operator_api.get_all()
-
             # Serialize object
             serializer = SearchOperatorSerializer(
                 search_operator_list, many=True
             )
-
             # Return response
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as api_exception:
@@ -47,21 +61,41 @@ class SearchOperatorList(APIView):
                 content, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @extend_schema(
+        summary="Create a search operator",
+        description="Create a new search operator",
+        request=SearchOperatorSerializer,
+        responses={
+            201: SearchOperatorSerializer,
+            400: OpenApiResponse(
+                description="Validation error / not unique / model error"
+            ),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+        examples=[
+            OpenApiExample(
+                "Create a search operator",
+                summary="Create a new search operator",
+                description="Create a new search operator with the provided parameters",
+                request_only=True,
+                value={
+                    "name": "search_operator_name",
+                    "xpath_list": ["/x/path/one", "/x/path/two"],
+                },
+            ),
+        ],
+    )
     @method_decorator(api_staff_member_required())
     def post(self, request):
         """Create a search operator
-
         Parameters:
             {
-                "name": "search_operator_name",
-                "xpath_list": ["/x/path/one", "/x/path/two"],
+              "name": "search_operator_name",
+              "xpath_list": ["/x/path/one", "/x/path/two"],
             }
-
         Args:
             request: HTTP request
-
         Returns:
-
             - code: 201
               content: Created search operator
             - code: 400
@@ -72,13 +106,10 @@ class SearchOperatorList(APIView):
         try:
             # Build serializer
             serializer = SearchOperatorSerializer(data=request.data)
-
             # Validate data
             serializer.is_valid(raise_exception=True)
-
             # Save data
             serializer.save()
-
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except ValidationError as validation_exception:
             content = {"message": validation_exception.detail}
@@ -104,27 +135,43 @@ class SearchOperatorList(APIView):
             )
 
 
+@extend_schema(
+    tags=["Search Operator"],
+    description="Search operator detail",
+)
 class SearchOperatorDetail(APIView):
     """Search operator detail"""
 
+    @extend_schema(
+        summary="Retrieve a search operator",
+        description="Retrieve a search operator by ID",
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                description="Search Operator ID",
+            ),
+        ],
+        responses={
+            200: SearchOperatorSerializer,
+            404: OpenApiResponse(description="Object was not found"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+    )
     def get(self, request, pk):
         """Retrieve search operator from database
-
         Args:
-
             request: HTTP request
             pk: ObjectId
-
         Returns:
             SearchOperator
         """
         try:
             # Get object
             search_operator = search_operator_api.get_by_id(pk)
-
             # Serialize object
             serializer = SearchOperatorSerializer(search_operator)
-
             # Return response
             return Response(serializer.data)
         except exceptions.DoesNotExist:
@@ -136,20 +183,48 @@ class SearchOperatorDetail(APIView):
                 content, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @extend_schema(
+        summary="Update a search operator",
+        description="Update a search operator by ID",
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                description="Search Operator ID",
+            ),
+        ],
+        request=SearchOperatorSerializer(partial=True),
+        responses={
+            200: SearchOperatorSerializer,
+            400: OpenApiResponse(description="Validation error"),
+            404: OpenApiResponse(description="Object was not found"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+        examples=[
+            OpenApiExample(
+                "Update a search operator",
+                summary="Update a search operator",
+                description="Update a search operator with the provided parameters",
+                request_only=True,
+                value={
+                    "name": "new_name",
+                    "xpath_list": ["/x/path/one/new", "/x/path/two/new"],
+                },
+            ),
+        ],
+    )
     @method_decorator(api_staff_member_required())
     def patch(self, request, pk):
         """Update a search operator
-
         Parameters:
             {
-                "name": "new_name",
-                "xpath_list": ["/x/path/one/new", "/x/path/two/new"]
+              "name": "new_name",
+              "xpath_list": ["/x/path/one/new", "/x/path/two/new"]
             }
-
         Args:
             request: HTTP request
             pk: ObjectId
-
         Returns:
             - code: 200
               content: Updated data
@@ -163,16 +238,13 @@ class SearchOperatorDetail(APIView):
         try:
             # Get object
             search_operator = search_operator_api.get_by_id(pk)
-
             # Build serializer
             search_operator_serializer = SearchOperatorSerializer(
                 instance=search_operator, data=request.data, partial=True
             )
-
             # Validate and save search operator
             search_operator_serializer.is_valid(raise_exception=True)
             search_operator_serializer.save()
-
             return Response(
                 search_operator_serializer.data, status=status.HTTP_200_OK
             )
@@ -188,14 +260,30 @@ class SearchOperatorDetail(APIView):
                 content, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @extend_schema(
+        summary="Delete a search operator",
+        description="Delete a search operator by ID",
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                description="Search Operator ID",
+            ),
+        ],
+        responses={
+            204: None,
+            403: OpenApiResponse(description="Access Forbidden"),
+            404: OpenApiResponse(description="Object was not found"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+    )
     @method_decorator(api_staff_member_required())
     def delete(self, request, pk):
         """Delete a search operator
-
         Args:
             request: HTTP request
             pk: ObjectId
-
         Returns:
             - code: 204
               content: Deletion success
@@ -209,10 +297,8 @@ class SearchOperatorDetail(APIView):
         try:
             # Get object
             search_operator = search_operator_api.get_by_id(pk)
-
             # delete object
             search_operator_api.delete(search_operator)
-
             # Return response
             return Response(status=status.HTTP_204_NO_CONTENT)
         except exceptions.DoesNotExist:

@@ -2,37 +2,52 @@
 """
 
 from django.db import IntegrityError
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    extend_schema,
+    OpenApiExample,
+    OpenApiResponse,
+)
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core_main_app.access_control.exceptions import AccessControlError
-from core_main_app.commons import exceptions
-
 import core_explore_keyword_app.components.persistent_query_keyword.api as persistent_query_keyword_api
 from core_explore_keyword_app.rest.persistent_query_keyword.serializers import (
     PersistentQueryKeywordSerializer,
     PersistentQueryKeywordAdminSerializer,
 )
+from core_main_app.access_control.exceptions import AccessControlError
+from core_main_app.commons import exceptions
 
 
+@extend_schema(
+    tags=["Persistent Query by Keywords"],
+    description="List all persistent query by keywords, or create a new one",
+)
 class AdminPersistentQueryKeywordList(APIView):
-    """List all persistent query keyword, or create a new one."""
+    """List all persistent query by keywords, or create a new one."""
 
     permission_classes = (IsAdminUser,)
     serializer = PersistentQueryKeywordAdminSerializer
 
+    @extend_schema(
+        summary="Get all persistent query by keyword",
+        description="Retrieve a list of all persistent query by keywords",
+        responses={
+            200: PersistentQueryKeywordAdminSerializer(many=True),
+            403: OpenApiResponse(description="Access Forbidden"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+    )
     def get(self, request):
         """Get all user persistent query keyword
-
         Args:
-
             request: HTTP request
-
         Returns:
-
             - code: 200
               content: List of persistent query keyword
             - code: 403
@@ -42,14 +57,11 @@ class AdminPersistentQueryKeywordList(APIView):
         """
         if not request.user.is_superuser:
             return Response(status=status.HTTP_403_FORBIDDEN)
-
         try:
             # Get object
             object_list = persistent_query_keyword_api.get_all(request.user)
-
             # Serialize object
             serializer = self.serializer(object_list, many=True)
-
             # Return response
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as api_exception:
@@ -58,24 +70,43 @@ class AdminPersistentQueryKeywordList(APIView):
                 content, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @extend_schema(
+        summary="Create a persistent query by keywords",
+        description="Create a new persistent query by keywords",
+        request=PersistentQueryKeywordAdminSerializer,
+        responses={
+            201: PersistentQueryKeywordAdminSerializer,
+            400: OpenApiResponse(description="Validation error"),
+            403: OpenApiResponse(description="Access Forbidden"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+        examples=[
+            OpenApiExample(
+                "Create a persistent query by keywords",
+                summary="Create a new persistent query by keywords",
+                description="Create a new persistent query by keywords with the provided parameters",
+                request_only=True,
+                value={
+                    "content": "{}",
+                    "templates": ["123"],
+                    "name": "persistent_query_keyword",
+                    "user_id": "123",
+                },
+            ),
+        ],
+    )
     def post(self, request):
         """Create a persistent query keyword
-
         Parameters:
-
             {
-                "content": "{}",
-                "templates": ["5ea99316d26ebc48e475c60a"],
-                "name": "persistent_query_keyword",
-                "user_id": "0"
+              "content": "{}",
+              "templates": ["123"],
+              "name": "persistent_query_keyword",
+              "user_id": "123"
             }
-
         Args:
-
             request: HTTP request
-
         Returns:
-
             - code: 201
               content: Created data
             - code: 400
@@ -87,18 +118,15 @@ class AdminPersistentQueryKeywordList(APIView):
         """
         if not request.user.is_superuser:
             return Response(status=status.HTTP_403_FORBIDDEN)
-
         try:
             # Build serializer
             serializer = self.serializer(
                 data=request.data, context={"request": request}
             )
-
             # Validate data
             serializer.is_valid(raise_exception=True)
             # Save data
             serializer.save()
-
             # Return the serialized data
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except ValidationError as validation_exception:
@@ -111,62 +139,83 @@ class AdminPersistentQueryKeywordList(APIView):
             )
 
 
+@extend_schema(
+    tags=["Persistent Query by Keywords"],
+    description="List all persistent queries by keywords or Create one",
+)
 class PersistentQueryKeywordList(APIView):
-    """List all persistent queries keyword or Create  one"""
+    """List all persistent queries by keywords or Create one"""
 
     permission_classes = (IsAuthenticated,)
     serializer = PersistentQueryKeywordSerializer
 
+    @extend_schema(
+        summary="Get all persistent query by keywords by user",
+        description="Retrieve a list of all persistent query by keywords for the current user",
+        responses={
+            200: PersistentQueryKeywordSerializer(many=True),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+    )
     def get(self, request):
         """Get user persistent query keyword
-
         Args:
-
             request: HTTP request
-
         Returns:
-
             - code: 200
               content: List of Persistent query keyword
             - code: 500
               content: Internal server error
         """
-
         try:
             # Get object
             object_list = persistent_query_keyword_api.get_all_by_user(
                 request.user
             )
-
             # Serialize object
             serializer = self.serializer(object_list, many=True)
-
             # Return response
             return Response(serializer.data, status=status.HTTP_200_OK)
-
         except Exception as api_exception:
             content = {"message": str(api_exception)}
             return Response(
                 content, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @extend_schema(
+        summary="Create a persistent query by keywords",
+        description="Create a new persistent query by keywords",
+        request=PersistentQueryKeywordSerializer,
+        responses={
+            201: PersistentQueryKeywordSerializer,
+            400: OpenApiResponse(description="Validation error"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+        examples=[
+            OpenApiExample(
+                "Create a persistent query by keywords",
+                summary="Create a new persistent query by keywords",
+                description="Create a new persistent query by keywords with the provided parameters",
+                request_only=True,
+                value={
+                    "content": "{}",
+                    "templates": ["123"],
+                    "name": "persistent_query_keyword",
+                },
+            ),
+        ],
+    )
     def post(self, request):
         """Create a new persistent query keyword
-
         Parameters:
-
             {
-                "content": "{}",
-                "templates": ["5ea99316d26ebc48e475c60a"],
-                "name": "persistent_query_keyword"
+              "content": "{}",
+              "templates": ["123"],
+              "name": "persistent_query_keyword"
             }
-
         Args:
-
             request: HTTP request
-
         Returns:
-
             - code: 201
               content: Created data
             - code: 400
@@ -174,18 +223,15 @@ class PersistentQueryKeywordList(APIView):
             - code: 500
               content: Internal server error
         """
-
         try:
             # Build serializer
             serializer = self.serializer(
                 data=request.data, context={"request": request}
             )
-
             # Validate data
             serializer.is_valid(raise_exception=True)
             # Save data
             serializer.save()
-
             # Return the serialized data
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except ValidationError as validation_exception:
@@ -198,20 +244,39 @@ class PersistentQueryKeywordList(APIView):
             )
 
 
+@extend_schema(
+    tags=["Persistent Query by Keywords"],
+    description="Persistent query by keywords detail",
+)
 class PersistentQueryKeywordDetail(APIView):
     """Persistent query keyword detail"""
 
     permission_classes = (IsAuthenticated,)
     serializer = PersistentQueryKeywordSerializer
 
+    @extend_schema(
+        summary="Retrieve a persistent query by keywords",
+        description="Retrieve a persistent query by keywords by ID",
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                description="Persistent Query by Keywords ID",
+            ),
+        ],
+        responses={
+            200: PersistentQueryKeywordSerializer,
+            403: OpenApiResponse(description="Access Forbidden"),
+            404: OpenApiResponse(description="Object was not found"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+    )
     def get(self, request, pk):
         """Retrieve persistent query keyword from database
-
         Args:
-
             request: HTTP request
             pk: ObjectId
-
         Returns:
             PersistentQuery
         """
@@ -220,12 +285,10 @@ class PersistentQueryKeywordDetail(APIView):
             persistent_query_keyword = persistent_query_keyword_api.get_by_id(
                 pk, request.user
             )
-
             # Serialize object
             serializer = self.serializer(
                 persistent_query_keyword, context={"request": request}
             )
-
             # Return response
             return Response(serializer.data)
         except AccessControlError as exception:
@@ -240,20 +303,50 @@ class PersistentQueryKeywordDetail(APIView):
                 content, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @extend_schema(
+        summary="Update a persistent query by keywords",
+        description="Update a persistent query by keywords by ID",
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                description="Persistent Query by Keywords ID",
+            ),
+        ],
+        request=PersistentQueryKeywordSerializer(partial=True),
+        responses={
+            200: PersistentQueryKeywordSerializer,
+            400: OpenApiResponse(description="Validation error"),
+            403: OpenApiResponse(description="Access Forbidden"),
+            404: OpenApiResponse(description="Object was not found"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+        examples=[
+            OpenApiExample(
+                "Update a persistent query by keywords",
+                summary="Update a persistent query by keywords",
+                description="Update a persistent query by keywords with the provided parameters",
+                request_only=True,
+                value={
+                    "content": "{}",
+                    "templates": ["123"],
+                    "name": None,
+                },
+            ),
+        ],
+    )
     def patch(self, request, pk):
         """Update a persistent query keyword
-
         Parameters:
             {
-                "content": "{}",
-                "templates": ["5ea99316d26ebc48e475c60a"],
-                "name": null
+              "content": "{}",
+              "templates": ["123"],
+              "name": null
             }
-
         Args:
             request: HTTP request
             pk: ObjectId
-
         Returns:
             - code: 200
               content: Updated data
@@ -271,7 +364,6 @@ class PersistentQueryKeywordDetail(APIView):
             persistent_query_keyword = persistent_query_keyword_api.get_by_id(
                 pk, request.user
             )
-
             # Build serializer
             serializer = self.serializer(
                 instance=persistent_query_keyword,
@@ -279,11 +371,9 @@ class PersistentQueryKeywordDetail(APIView):
                 partial=True,
                 context={"request": request},
             )
-
             # Validate and save persistent query keyword
             serializer.is_valid(raise_exception=True)
             serializer.save()
-
             return Response(serializer.data, status=status.HTTP_200_OK)
         except ValidationError as validation_exception:
             content = {"message": validation_exception.detail}
@@ -303,13 +393,29 @@ class PersistentQueryKeywordDetail(APIView):
                 content, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+    @extend_schema(
+        summary="Delete a persistent query by keywords",
+        description="Delete a persistent query by keywords by ID",
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                description="Persistent Query by Keywords ID",
+            ),
+        ],
+        responses={
+            204: None,
+            403: OpenApiResponse(description="Access Forbidden"),
+            404: OpenApiResponse(description="Object was not found"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+    )
     def delete(self, request, pk):
-        """Delete a persistent query keyword
-
+        """Delete a persistent query by keywords
         Args:
             request: HTTP request
             pk: ObjectId
-
         Returns:
             - code: 204
               content: Deletion success
@@ -325,12 +431,10 @@ class PersistentQueryKeywordDetail(APIView):
             persistent_query_keyword = persistent_query_keyword_api.get_by_id(
                 pk, request.user
             )
-
             # delete object
             persistent_query_keyword_api.delete(
                 persistent_query_keyword, request.user
             )
-
             # Return response
             return Response(status=status.HTTP_204_NO_CONTENT)
         except AccessControlError as exception:
@@ -346,20 +450,39 @@ class PersistentQueryKeywordDetail(APIView):
             )
 
 
+@extend_schema(
+    tags=["Persistent Query by Keywords"],
+    description="Persistent query by keywords by name",
+)
 class PersistentQueryKeywordByName(APIView):
-    """Persistent query keyword by name"""
+    """Persistent query by keywords by name"""
 
     permission_classes = (IsAuthenticated,)
     serializer = PersistentQueryKeywordSerializer
 
+    @extend_schema(
+        summary="Retrieve a persistent query by keywords by name",
+        description="Retrieve a persistent query by keywords by its name",
+        parameters=[
+            OpenApiParameter(
+                name="name",
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.PATH,
+                description="Persistent Query by Keywords name",
+            ),
+        ],
+        responses={
+            200: PersistentQueryKeywordSerializer,
+            403: OpenApiResponse(description="Access Forbidden"),
+            404: OpenApiResponse(description="Object was not found"),
+            500: OpenApiResponse(description="Internal server error"),
+        },
+    )
     def get(self, request, name):
-        """Retrieve persistent query keyword from database
-
+        """Retrieve persistent query by keywords from database
         Args:
-
             request: HTTP request
             name: name
-
         Returns:
             PersistentQuery
         """
@@ -368,10 +491,8 @@ class PersistentQueryKeywordByName(APIView):
             persistent_query_keyword = (
                 persistent_query_keyword_api.get_by_name(name, request.user)
             )
-
             # Serialize object
             serializer = self.serializer(persistent_query_keyword)
-
             # Return response
             return Response(serializer.data)
         except AccessControlError as exception:
