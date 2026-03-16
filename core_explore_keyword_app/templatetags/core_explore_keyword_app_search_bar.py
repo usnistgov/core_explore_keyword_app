@@ -1,5 +1,4 @@
-"""Template tag to include the search bar
-"""
+"""Template tag to include the search bar"""
 
 from django import template
 
@@ -8,7 +7,6 @@ from core_main_app.settings import DATA_SORTING_FIELDS
 from core_explore_common_app.components.query import api as query_api
 from core_explore_common_app.components.query.models import Query
 from core_explore_keyword_app.forms import KeywordForm
-
 
 register = template.Library()
 

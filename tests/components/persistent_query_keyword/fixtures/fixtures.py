@@ -1,5 +1,4 @@
-""" Fixtures files for Persistent Query Keyword
-"""
+"""Fixtures files for Persistent Query Keyword"""
 
 from core_main_app.utils.integration_tests.fixture_interface import (
     FixtureInterface,

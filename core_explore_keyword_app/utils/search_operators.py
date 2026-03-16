@@ -1,5 +1,4 @@
-""" Search operators utilities
-"""
+"""Search operators utilities"""
 
 import logging
 

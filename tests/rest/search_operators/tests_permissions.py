@@ -1,5 +1,4 @@
-""" Authentication tests for search operators REST API.
-"""
+"""Authentication tests for search operators REST API."""
 
 from unittest.mock import patch
 

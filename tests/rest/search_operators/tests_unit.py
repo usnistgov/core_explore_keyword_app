@@ -1,5 +1,4 @@
-""" Unit tests for search operators REST API.
-"""
+"""Unit tests for search operators REST API."""
 
 from collections import OrderedDict
 from unittest.mock import patch

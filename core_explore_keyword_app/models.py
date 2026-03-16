@@ -1,5 +1,4 @@
-"""Explore Keyword models
-"""
+"""Explore Keyword models"""
 
 from django.db import models
 

@@ -1,5 +1,4 @@
-""" Persistent Query Keyword model
-"""
+"""Persistent Query Keyword model"""
 
 from django.core.exceptions import ObjectDoesNotExist
 

@@ -1,5 +1,4 @@
-""" Search Operator API
-"""
+"""Search Operator API"""
 
 from core_main_app.commons import exceptions
 from core_main_app.utils.xml import xpath_to_dot_notation

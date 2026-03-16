@@ -1,5 +1,4 @@
-""" REST views for the persistent query keyword.
-"""
+"""REST views for the persistent query keyword."""
 
 from django.db import IntegrityError
 from drf_spectacular.types import OpenApiTypes

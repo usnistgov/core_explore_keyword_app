@@ -1,5 +1,4 @@
-""" Admin forms for Search Operators.
-"""
+"""Admin forms for Search Operators."""
 
 from django import forms
 from django.forms import ModelForm

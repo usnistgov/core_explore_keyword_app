@@ -1,5 +1,4 @@
-""" REST views for the search operators.
-"""
+"""REST views for the search operators."""
 
 from django.utils.decorators import method_decorator
 from drf_spectacular.types import OpenApiTypes

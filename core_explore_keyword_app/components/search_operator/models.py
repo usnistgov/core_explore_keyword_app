@@ -1,5 +1,4 @@
-""" Search Operator model
-"""
+"""Search Operator model"""
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError

@@ -1,5 +1,4 @@
-""" Unit tests for user-side AJAX calls
-"""
+"""Unit tests for user-side AJAX calls"""
 
 import json
 from unittest import TestCase

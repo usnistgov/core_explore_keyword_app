@@ -1,5 +1,4 @@
-""" Serializers used for the persistent query keyword REST API.
-"""
+"""Serializers used for the persistent query keyword REST API."""
 
 from rest_framework.serializers import ModelSerializer
 

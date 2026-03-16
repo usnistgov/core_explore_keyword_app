@@ -1,5 +1,4 @@
-""" Unit Test Persistent Query Keyword
-"""
+"""Unit Test Persistent Query Keyword"""
 
 from django.contrib.auth.models import AnonymousUser
 

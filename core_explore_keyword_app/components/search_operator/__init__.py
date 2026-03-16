@@ -1,2 +1,1 @@
-""" Search Operator Component
-"""
+"""Search Operator Component"""

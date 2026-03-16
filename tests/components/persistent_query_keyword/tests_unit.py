@@ -1,5 +1,4 @@
-""" Unit tests for PersistentQueryKeyword.
-"""
+"""Unit tests for PersistentQueryKeyword."""
 
 from unittest import TestCase, mock
 

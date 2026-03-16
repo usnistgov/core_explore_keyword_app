@@ -1,5 +1,4 @@
-""" Persistent Query Keyword API
-"""
+"""Persistent Query Keyword API"""
 
 from core_main_app.access_control.api import has_perm_administration
 from core_main_app.access_control.decorators import access_control

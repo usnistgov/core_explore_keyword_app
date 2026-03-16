@@ -1,5 +1,4 @@
-""" Admin views for explore by keyword
-"""
+"""Admin views for explore by keyword"""
 
 from django.views.generic import View
 

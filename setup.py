@@ -1,5 +1,4 @@
-""" Setup core explore keyword app
-"""
+"""Setup core explore keyword app"""
 
 from os import chdir, pardir
 from os.path import join, exists, dirname, normpath, abspath

@@ -1,5 +1,4 @@
-""" Abstract Keyword Search Extras
-"""
+"""Abstract Keyword Search Extras"""
 
 from abc import ABCMeta, abstractmethod
 

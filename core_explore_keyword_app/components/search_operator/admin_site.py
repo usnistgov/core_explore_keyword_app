@@ -1,5 +1,4 @@
-""" Custom admin site for the Search Operator model
-"""
+"""Custom admin site for the Search Operator model"""
 
 from django.contrib import admin
 
